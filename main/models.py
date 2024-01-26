@@ -1,10 +1,25 @@
 from django.db import models
 
+import re
+from django.core.validators import RegexValidator
+
 class Banner(models.Model):
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    partnership_logo =models.ImageField(upload_to='Banner_photo/')
-    image = models.ImageField(upload_to='Banner/')
+    img = models.ImageField(upload_to='partnership_logo/', validators=[
+        RegexValidator(
+            regex=r'^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|gif)$',
+            message='File name must have a valid image extension (jpg, jpeg, png, gif).',
+            code='invalid_image_filename'
+        ),
+    ])
+    img = models.ImageField(upload_to='banner_photo/', validators=[
+        RegexValidator(
+            regex=r'^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|gif)$',
+            message='File name must have a valid image extension (jpg, jpeg, png, gif).',
+            code='invalid_image_filename'
+        ),
+    ])
 
     def __str__(self):
         return self.title
@@ -12,12 +27,18 @@ class Banner(models.Model):
 
 class Recomendation(models.Model):
     title = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='Recomendation_photo/')
+    img = models.ImageField(upload_to='Recomendation_photo/')
     name = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     user_name = models.CharField(max_length=255)
-    adress = models.CharField(max_length=255)
-    user_photo = models.ImageField(upload_to='user_photo/')
+    address = models.CharField(max_length=255)
+    user_img = models.ImageField(upload_to='user_photo/', validators=[
+        RegexValidator(
+            regex=r'^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|gif)$',
+            message='File name must have a valid image extension (jpg, jpeg, png, gif).',
+            code='invalid_image_filename'
+        ),
+    ])
     CHOICES_TAG = (
         ('popular', 'popular'),
         ('new house', 'new house'),
@@ -39,7 +60,13 @@ class Sell(models.Model):
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     detail = models.ManyToManyField(to='Detail')
-    user_photo = models.ImageField(upload_to='user_photo/')
+    user_img = models.ImageField(upload_to='user_photo/', validators=[
+        RegexValidator(
+            regex=r'^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|gif)$',
+            message='File name must have a valid image extension (jpg, jpeg, png, gif).',
+            code='invalid_image_filename'
+        ),
+    ])
     user_name = models.CharField(max_length=255)
     user_job = models.CharField(max_length=255)
     presintation = models.ManyToManyField(to='Presintaiton')
@@ -57,15 +84,34 @@ class Detail(models.Model):
 
 
 class Presintaiton(models.Model):
-    img = models.FileField(upload_to='video_img/')
+    img = models.FileField(upload_to='photo_vidoe/', validators=[
+        RegexValidator(
+            regex=r'^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|gif|mp4|mov|avi)$',
+            message='File name must have a valid image or video extension (jpg, jpeg, png, gif, mp4, mov, avi).',
+            code='invalid_file_extension'
+        ),
+    ])
 
 
 class Testimonial(models.Model):
     title = models.CharField(max_length=255)
-    photo = models.ImageField(upload_to='Testimonial/')
+    img = models.ImageField(upload_to='testimonail_img/', validators=[
+        RegexValidator(
+            regex=r'^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|gif)$',
+            message='File name must have a valid image extension (jpg, jpeg, png, gif).',
+            code='invalid_image_filename'
+        ),
+    ])
+
     user_title = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    user_photo = models.ImageField(upload_to='Test_photo/')
+    user_img = models.ImageField(upload_to='user_img/', validators=[
+        RegexValidator(
+            regex=r'^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|gif)$',
+            message='File name must have a valid image extension (jpg, jpeg, png, gif).',
+            code='invalid_image_filename'
+        ),
+    ])
     user_job = models.CharField(max_length=255)
     user_name = models.CharField(max_length=255)
     reting = models.FloatField()
@@ -77,7 +123,14 @@ class Testimonial(models.Model):
 class About_us(models.Model):
     title = models.CharField(max_length=255)
     user_fullname = models.CharField(max_length=255)
-    house_img = models.ImageField(upload_to='image_house/')
+    img = models.ImageField(upload_to='house_img/', validators=[
+        RegexValidator(
+            regex=r'^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|gif)$',
+            message='File name must have a valid image extension (jpg, jpeg, png, gif).',
+            code='invalid_image_filename'
+        ),
+    ])
+
     description = models.CharField(max_length=255)
     date = models.DateTimeField(auto_now=True)
 
@@ -87,18 +140,46 @@ class About_us(models.Model):
 
 class Contact(models.Model):
     name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
+    email = models.CharField(max_length=100, validators=[
+        RegexValidator(
+            regex=r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
+            message='Enter a valid email address.',
+            code='invalid_email'
+        ),
+    ])
 
     def __str__(self):
         return self.name
 
 
 class Info(models.Model):
-    my_logo = models.ImageField(upload_to='my_logo/')
+    my_logo = models.ImageField(upload_to='my_logo/', validators=[
+        RegexValidator(
+            regex=r'^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|gif)$',
+            message='File name must have a valid image extension (jpg, jpeg, png, gif).',
+            code='invalid_image_filename'
+        ),
+    ])
+
     description = models.CharField(max_length=255)
     facebook = models.CharField(max_length=255)
     twitter = models.CharField(max_length=255)
-    instagramm = models.CharField(max_length=255)
+    instagram = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
-    phone_number = models.IntegerField()
-    email = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=13, null=True, blank=True, unique=True, validators=[
+        RegexValidator(
+            regex='^[\+]9{2}8{1}[0-9]{9}$',
+            message='Invalid phone number',
+            code='invalid_number'
+        ), ])
+    email = models.CharField(max_length=100, validators=[
+        RegexValidator(
+            regex=r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
+            message='Enter a valid email address.',
+            code='invalid_email'
+            ),
+        ])
+
+
+
+
