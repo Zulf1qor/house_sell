@@ -1,5 +1,4 @@
 from django.db import models
-
 import re
 from django.core.validators import RegexValidator
 
@@ -179,7 +178,4 @@ class Info(models.Model):
             code='invalid_email'
             ),
         ])
-
-
-
 
